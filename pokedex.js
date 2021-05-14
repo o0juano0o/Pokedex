@@ -21,10 +21,11 @@ const getPokemon = async(url) => {
         console.error(error);
     };
 };
+//consultar url de species para descripcion de pokemon
 const getSpecies = async (url) => {
     try {
         const response = await fetch(url);
-        const species = await response.json();
+        const  species = await response.json();
         return species;
     } catch (error) {
         console.error (error);
@@ -37,27 +38,27 @@ const buscador = async() => {
     const pokemonName = await getName();
     const pokemonInList = pokemonName.find(pokemon => pokemon.name === nombre);
     const pokemon = await getPokemon(pokemonInList.url);
-    //const descripcion = await getSpecies(speciesUrl.url);
+    
+    //Desestructuring de las propiedades del pokemon
+    const {name, height, weight, species:{url : speciesUrl}, sprites:{other}, types} = pokemon;
 
+    
     //Species-Descripción
-
+    const {color, flavor_text_entries: descripcion, genera, shape} = await getSpecies(speciesUrl)
+    
     //Tipos
-    const poketipos = (pokemon.types);
-    const tipos = poketipos.map(tipo => tipo.type);
+    const tipos = types.map(tipo => tipo.type);
     //Sprites
- 
-   
-
-    //console.log(imagen);
-   
+    // const {dream_world ,...rest} = other;
+    // console.log(rest);
     //Imprimir en pantalla
     const porPantalla =
-        `<strong>Nombre:</strong> ${pokemon.name}<br/>
+        `<strong>Nombre:</strong> ${name}<br/>
         <strong>Tipo:</strong> ${tipos.map(info => info.name)}<br/>
-        <strong>Altura:</strong> ${pokemon.height}<br/>
-        <strong>Peso:</strong> ${pokemon.weight}<br/><br/>
-        <strong>The duck Pokemon</strong><br/>
-        Uses mysterious powers to perform various attacks.`;
+        <strong>Altura:</strong> ${height}<br/>
+        <strong>Peso:</strong> ${weight}<br/><br/>
+        <strong>${genera[7].genus}</strong><br/>
+        ${descripcion[1].flavor_text}`;
 
         document.getElementById('stats').innerHTML = '';
         document.getElementById('stats').insertAdjacentHTML('beforeend',porPantalla);
