@@ -49,8 +49,8 @@ const buscador = async() => {
     //Tipos
     const tipos = types.map(tipo => tipo.type);
     //Sprites
-    // const {dream_world ,...rest} = other;
-    // console.log(rest);
+    const pokepic = other['official-artwork'].front_default;
+    console.log(pokepic);
     //Imprimir en pantalla
     const porPantalla =
         `<strong>Nombre:</strong> ${name}<br/>
@@ -62,7 +62,7 @@ const buscador = async() => {
 
         document.getElementById('stats').innerHTML = '';
         document.getElementById('stats').insertAdjacentHTML('beforeend',porPantalla);
-       // document.getElementById('picture').innerHTML= <img src="" alt="" height="170" />
+        document.getElementById('picture').innerHTML= `<img src = ${pokepic} alt="" height="170" />`
         return pokemon;
     
 };
