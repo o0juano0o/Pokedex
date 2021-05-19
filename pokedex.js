@@ -2,7 +2,7 @@
 //Proyecto Pokedex
 
 //Primera petición que nos devuelve un json con 2 propiedades: "name" y "url"(con los datos del pokemon nombrado)
-const getName = async (url="https://pokeapi.co/api/v2/pokemon?offset=0&limit=151") => {
+const getList = async (url="https://pokeapi.co/api/v2/pokemon?offset=0&limit=151") => {
     try {
         const response = await fetch(url);
         const {results : pokemons} = await response.json();
@@ -30,47 +30,59 @@ const getSpecies = async (url) => {
     } catch (error) {
         console.error (error);
     }
-}
+};
+
+let currentId = 0;
 
 //Función asincrona que toma los valores de las 2 url y el nombre seleccionado por el usuario (aca deberia agregar otras busquedas)
 const buscador = async() => {
-    const {value: nombre} = document.getElementById("searchName");
-    const pokemonName = await getName();
-    const pokemonInList = pokemonName.find(pokemon => pokemon.name === nombre);
-    const pokemon = await getPokemon(pokemonInList.url);
-    
-    //Desestructuring de las propiedades del pokemon
-    const {name, height, weight, species:{url : speciesUrl}, sprites:{other}, types} = pokemon;
-
-    
-    //Species-Descripción
-    const {color, flavor_text_entries: descripcion, genera, shape} = await getSpecies(speciesUrl)
-    
-    //Tipos
-    const tipos = types.map(tipo => tipo.type);
-    //Sprites
-    const pokepic = other['official-artwork'].front_default;
-    console.log(pokepic);
-    //Imprimir en pantalla
-    const porPantalla =
-        `<strong>Nombre:</strong> ${name}<br/>
-        <strong>Tipo:</strong> ${tipos.map(info => info.name)}<br/>
-        <strong>Altura:</strong> ${height}<br/>
-        <strong>Peso:</strong> ${weight}<br/><br/>
-        <strong>${genera[7].genus}</strong><br/>
-        ${descripcion[1].flavor_text}`;
-
-        document.getElementById('stats').innerHTML = '';
-        document.getElementById('stats').insertAdjacentHTML('beforeend',porPantalla);
-        document.getElementById('picture').innerHTML= `<img src = ${pokepic} alt="" height="170" />`
-        return pokemon;
-    
+    const {value: searchName} = document.getElementById("searchName");//agarro el nombre buscado
+    const pokemonList = await getList();
+    const pokemonSelected = pokemonList.find(pokemon => pokemon.name === searchName);
+    const pokemon = await getPokemon(pokemonSelected.url);
+    const species = await getSpecies(pokemon.species.url)
+    console.log(pokemon.id);
+    print(pokemon, species);    
+    return currentId = pokemon.id;
 };
 
+const next = async()=>{
+        const id = currentId + 1;
+        const pokemonUrl = (`https://pokeapi.co/api/v2/pokemon/${id}/`);
+        const pokemon = await getPokemon(pokemonUrl);
+        const species = await getSpecies(pokemon.species.url)
+        print(pokemon, species);
+        return currentId = id;
+};
 
+const prev = async()=>{
+    const id = currentId - 1;
+    const pokemonUrl = (`https://pokeapi.co/api/v2/pokemon/${id}/`);
+    const pokemon = await getPokemon(pokemonUrl);
+    const species = await getSpecies(pokemon.species.url)
+    print(pokemon, species);
+    return currentId = id;
+};
 
+const print = (pokemon, species) =>{
+    const tipos = pokemon.types.map(tipo => tipo.type);
+    const inScreen =
+    `<strong>Nombre:</strong> ${pokemon.name}<br/>
+    <strong>Tipo:</strong> ${tipos.map(info => info.name)}<br/>
+    <strong>Altura:</strong> ${pokemon.height}<br/>
+    <strong>Peso:</strong> ${pokemon.weight}<br/><br/>
+    <strong>${species.genera[7].genus}</strong><br/>
+    ${species.flavor_text_entries[2].flavor_text}`;
 
+    document.getElementById('stats').innerHTML = '';
+    document.getElementById('stats').insertAdjacentHTML('beforeend',inScreen);
+    document.getElementById('picture').innerHTML= `<img src = ${pokemon.sprites.other['official-artwork'].front_default} alt="" height="170" />`
+};
 
         
 
     
+//Desestructuring de las propiedades del pokemon
+    //const {name, height, weight, species:{url : speciesUrl}, sprites:{other}, types} = pokemon;
+    //Species-Descripción
+    //const {color, flavor_text_entries: descripcion, genera, shape} = await getSpecies(pokemon.species.url)
