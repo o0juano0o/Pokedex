@@ -70,7 +70,7 @@
 		background-color: #8b0000;
 
 		border-top-left-radius: 30px;
-		-webkit-border-top-left-radius: 30px;
+		-webkit-border-top-left-radius:30px;
 		-moz-border-top-left-radius: 30px;
 		-o-border-top-left-radius: 30px;
 	}
@@ -914,6 +914,17 @@
 		-moz-box-shadow: 0 0 20px #ff6600 inset;
 		-o-box-shadow: 0 0 20px #ff6600 inset;
 	}
+	div.searchContainer{
+		overflow: hidden;
+		display: flex;
+		text-align: center;
+		justify-content: space-between;
+	}
+	div.searchContainer input{
+		background-color: transparent;
+		border: none;
+		margin: 0.7rem 0 0 0.3rem;
+	}
 
 	div#yellowBox2
 	{
@@ -935,6 +946,11 @@
 		-webkit-box-shadow: 0 0 20px #ff6600 inset;
 		-moz-box-shadow: 0 0 20px #ff6600 inset;
 		-o-box-shadow: 0 0 20px #ff6600 inset;
+	}
+
+	div#showId{
+		font-size:2rem;
+		margin: 1rem 0 0 1.3rem;
 	}
 
 }
@@ -1017,5 +1033,4 @@
 	{
 		display: none;
 	}
-
 }

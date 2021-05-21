@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" defer>
     <title>Pokedex</title>
 </head>
 <body>
@@ -85,12 +85,20 @@
           <div id="barbutton3"></div>
           <div id="barbutton4"></div>
           <div id="yellowBox1">
-              <form id="busqueda">
-                 <input type="text" name="Nombre" id="searchName" placeholder="Nombre del pokemón">
-                 <button type="button"  onclick="buscador()">Buscar</button>
-              </form>
+              <div class="searchContainer">
+                <form id="busqueda">
+                   <select name="searchOpt" id="searchOpt"">
+                     <option value="name">Name</option>
+                     <option value="id">Id</option>
+                   </select>
+                   <input type="text" name="Nombre" id="search" placeholder="Nombre del pokemón">
+                   <button type="button"  onclick="searchType()">Search</button>
+                </form>
+              </div>
          </div>
-          <div id="yellowBox2"></div>
+          <div id="yellowBox2">
+              <div id="showId"></div>
+          </div>
           <div id="bg_curve1_right"></div>
           <div id="bg_curve2_right"></div>
           <div id="curve1_right"></div>

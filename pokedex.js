@@ -2,7 +2,7 @@
 //Proyecto Pokedex
 
 //Primera petición que nos devuelve un json con 2 propiedades: "name" y "url"(con los datos del pokemon nombrado)
-const getList = async (url="https://pokeapi.co/api/v2/pokemon?offset=0&limit=151") => {
+const getList = async (url="https://pokeapi.co/api/v2/pokemon?offset=0&limit=800") => {
     try {
         const response = await fetch(url);
         const {results : pokemons} = await response.json();
@@ -34,28 +34,46 @@ const getSpecies = async (url) => {
 
 let currentId = 0;
 
-//Función asincrona que toma los valores de las 2 url y el nombre seleccionado por el usuario (aca deberia agregar otras busquedas)
-const buscador = async() => {
-    const {value: searchName} = document.getElementById("searchName");//agarro el nombre buscado
+const searchType = ()=>{
+   const searchType = document.getElementById("searchOpt").value
+   if (searchType == "name"){
+    return searchByName();
+   }else if (searchType == "id"){
+       return searchById();
+   }
+}
+
+const searchByName = async() => {
+    const {value: searchName} = document.getElementById("search");//agarro el nombre buscado
     const pokemonList = await getList();
     const pokemonSelected = pokemonList.find(pokemon => pokemon.name === searchName);
     const pokemon = await getPokemon(pokemonSelected.url);
     const species = await getSpecies(pokemon.species.url)
-    console.log(pokemon.id);
+    console.log(pokemon)
     print(pokemon, species);    
     return currentId = pokemon.id;
 };
 
-const next = async()=>{
-        const id = currentId + 1;
-        const pokemonUrl = (`https://pokeapi.co/api/v2/pokemon/${id}/`);
-        const pokemon = await getPokemon(pokemonUrl);
-        const species = await getSpecies(pokemon.species.url)
-        print(pokemon, species);
-        return currentId = id;
+const searchById = async() => {
+    const id = document.getElementById("search").value;
+    const pokemonUrl = (`https://pokeapi.co/api/v2/pokemon/${id}/`);
+    const pokemon = await getPokemon(pokemonUrl);
+    const species = await getSpecies(pokemon.species.url)
+    print(pokemon, species);
+    console.log (pokemon);
+    return currentId = pokemon.id;
 };
 
-const prev = async()=>{
+const next = async() => {
+    const id = currentId + 1;
+    const pokemonUrl = (`https://pokeapi.co/api/v2/pokemon/${id}/`);
+    const pokemon = await getPokemon(pokemonUrl);
+    const species = await getSpecies(pokemon.species.url)
+    print(pokemon, species);
+    return currentId = id;
+};
+
+const prev = async() => {
     const id = currentId - 1;
     const pokemonUrl = (`https://pokeapi.co/api/v2/pokemon/${id}/`);
     const pokemon = await getPokemon(pokemonUrl);
@@ -76,6 +94,8 @@ const print = (pokemon, species) =>{
 
     document.getElementById('stats').innerHTML = '';
     document.getElementById('stats').insertAdjacentHTML('beforeend',inScreen);
+    document.getElementById('showId').innerHTML = '';
+    document.getElementById('showId').insertAdjacentHTML('beforeend', `ID: ${pokemon.id}`);
     document.getElementById('picture').innerHTML= `<img src = ${pokemon.sprites.other['official-artwork'].front_default} alt="" height="170" />`
 };
 
